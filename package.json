@@ -1,0 +1,57 @@
+{
+  "name": "free-photocard-generator",
+  "version": "1.0.0",
+  "private": false,
+  "description": "Free Bengali news and social media photocard generator. Browser-based, no watermark, no signup.",
+  "license": "MIT",
+  "homepage": "https://photocard.720p.red",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/720pixel/Free-Photocard-Generator.git"
+  },
+  "keywords": [
+    "photocard",
+    "photocard-generator",
+    "photocard-maker",
+    "news-photocard",
+    "bangla-photocard",
+    "bengali",
+    "social-media",
+    "canva-alternative",
+    "konva",
+    "nextjs"
+  ],
+  "scripts": {
+    "dev": "next dev -p 3110",
+    "build": "next build",
+    "start": "next start -p 3110",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "browser-image-compression": "^2.0.2",
+    "clsx": "^2.1.1",
+    "konva": "^9.3.20",
+    "lucide-react": "^0.545.0",
+    "motion": "^12.23.24",
+    "next": "15.5.4",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "react-konva": "^19.0.7",
+    "tailwind-merge": "^3.3.1",
+    "zundo": "^2.3.0",
+    "zustand": "^5.0.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.13",
+    "@types/node": "^22.18.6",
+    "@types/react": "19.1.13",
+    "@types/react-dom": "19.1.9",
+    "eslint": "^9.36.0",
+    "eslint-config-next": "15.5.4",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.13",
+    "typescript": "^5.9.2"
+  },
+  "packageManager": "pnpm@10.29.3"
+}

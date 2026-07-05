@@ -1,0 +1,136 @@
+@import "tailwindcss";
+
+@variant dark (&:where(.dark, .dark *));
+
+/*
+  Identity: "Newsroom Risograph" — warm printing-press paper, ink black,
+  a signature vermilion with a riso-blue counter-accent and marigold spark.
+  Display: Space Grotesk. Body: Hind Siliguri (Bengali-first). Data: Space Mono.
+*/
+:root {
+  --paper: #f4efe4;
+  --paper-2: #ece5d6;
+  --ink: #1a1512;
+  --ink-soft: #6d6255;
+  --line: #e2d8c6;
+  --panel: #fbf8f1;
+  --panel-2: #f4efe4;
+  --vermilion: #e8462b;
+  --riso-blue: #2b4ce8;
+  --marigold: #f2b134;
+  --brand: #e8462b;
+  --brand-2: #2b4ce8;
+}
+
+.dark {
+  --paper: #16130f;
+  --paper-2: #1d1915;
+  --ink: #f3ede1;
+  --ink-soft: #a7998662;
+  --ink-soft: #a79986;
+  --line: #2c261f;
+  --panel: #1b1712;
+  --panel-2: #221d17;
+  --vermilion: #ff5a3c;
+  --riso-blue: #6d84ff;
+  --marigold: #f6c25a;
+  --brand: #ff5a3c;
+  --brand-2: #6d84ff;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-panel: var(--panel);
+  --color-panel-2: var(--panel-2);
+  --color-line: var(--line);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-brand: var(--brand);
+  --color-brand-2: var(--brand-2);
+  --color-vermilion: var(--vermilion);
+  --color-riso: var(--riso-blue);
+  --color-marigold: var(--marigold);
+  --font-display: "Space Grotesk", "Hind Siliguri", sans-serif;
+  --font-body: "Hind Siliguri", "Noto Sans Bengali", sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  color: var(--ink);
+  background-color: var(--paper);
+  /* faint halftone dot grid — the print-press signature texture */
+  background-image: radial-gradient(var(--line) 1px, transparent 1.4px);
+  background-size: 22px 22px;
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+
+/* Form controls do NOT inherit font-family by default, so browsers fall back
+   to a UA font that lacks Bengali conjunct shaping (হ্য → হ ্ য). Force the
+   Bengali-first body stack on every control so typed Bengali renders correctly. */
+input,
+textarea,
+select,
+button,
+optgroup,
+option {
+  font-family: var(--font-body);
+}
+
+/* Native selects/options: readable in both themes. */
+select {
+  color: var(--ink);
+  background-color: var(--panel);
+}
+select option,
+select optgroup {
+  color: var(--ink);
+  background-color: var(--panel);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.brand-gradient {
+  background: linear-gradient(120deg, var(--vermilion), var(--riso-blue));
+}
+
+/* Registration-mark / press-bar rule used as a section divider. */
+.press-rule {
+  height: 3px;
+  background:
+    repeating-linear-gradient(90deg, var(--vermilion) 0 18px, transparent 18px 26px),
+    var(--line);
+}
