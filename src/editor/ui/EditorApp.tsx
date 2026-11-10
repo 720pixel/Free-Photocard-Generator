@@ -11,6 +11,7 @@ import {
   Copy,
   Trash2,
   Sparkles,
+  Bookmark,
 } from "lucide-react";
 import { useEditor } from "../store";
 import { templateById, instantiate, TEMPLATES } from "../templates";
@@ -21,10 +22,12 @@ import { Toolbar } from "./Toolbar";
 import { Canvas } from "./Canvas";
 import { TemplatesPanel } from "./panels/TemplatesPanel";
 import { LayersPanel } from "./panels/LayersPanel";
+import { SavedPanel } from "./panels/SavedPanel";
 import { Inspector } from "./panels/Inspector";
 import { renderTemplateSvg } from "../render/svgPreview";
+import { getDesign } from "../savedDesigns";
 
-type LeftTab = "templates" | "layers";
+type LeftTab = "templates" | "saved" | "layers";
 
 export function EditorApp({ initialTemplate, initialSaved, initialSize }: { initialTemplate?: string; initialSaved?: string; initialSize?: string }) {
   const stageRef = useRef<StageHandle | null>(null);
@@ -40,8 +43,7 @@ export function EditorApp({ initialTemplate, initialSaved, initialSize }: { init
 
   useEffect(() => {
     if (initialSaved) {
-      fetch(`/unavailable/templates/${initialSaved}`)
-        .then((r) => (r.ok ? r.json() : null))
+      void getDesign(initialSaved)
         .then((row) => {
           if (row?.design?.layers) {
             loadTemplate(row.design);
@@ -119,11 +121,22 @@ export function EditorApp({ initialTemplate, initialSaved, initialSize }: { init
             <TabBtn active={leftTab === "templates"} onClick={() => setLeftTab("templates")}>
               <LayoutTemplate size={15} /> Templates
             </TabBtn>
+            <TabBtn active={leftTab === "saved"} onClick={() => setLeftTab("saved")}>
+              <Bookmark size={15} /> Saved
+            </TabBtn>
             <TabBtn active={leftTab === "layers"} onClick={() => setLeftTab("layers")}>
               <LayersIcon size={15} /> Layers
             </TabBtn>
           </div>
-          <div className="min-h-0 flex-1">{leftTab === "templates" ? <TemplatesPanel /> : <LayersPanel />}</div>
+          <div className="min-h-0 flex-1">
+            {leftTab === "templates" ? (
+              <TemplatesPanel />
+            ) : leftTab === "saved" ? (
+              <SavedPanel onOpen={() => setLeftTab("layers")} />
+            ) : (
+              <LayersPanel />
+            )}
+          </div>
         </aside>
 
         {/* Canvas + overlays */}

@@ -3,36 +3,36 @@
 import { useState } from "react";
 import { Save, Loader2, Check, X } from "lucide-react";
 import { useEditor } from "@/editor/store";
-
-function readCookie(name: string): string | null {
-  if (typeof document === "undefined") return null;
-  const m = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
-  return m ? decodeURIComponent(m[1]) : null;
-}
+import { docDimensions } from "@/editor/types";
+import { presetByKey } from "@/lib/presets";
+import { saveDesign } from "@/editor/savedDesigns";
+import type { StageHandle } from "@/editor/render/Stage";
 
 type Phase = "idle" | "naming" | "saving" | "saved";
 
-export default function SaveDesignButton() {
+const THUMB_W = 240;
+
+export default function SaveDesignButton({ stageRef }: { stageRef: React.RefObject<StageHandle | null> }) {
   const doc = useEditor((s) => s.doc);
   const [phase, setPhase] = useState<Phase>("idle");
   const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  async function begin() {
+  function begin() {
     setError(null);
-    try {
-      const res = await fetch("/unavailable/auth/me", { cache: "no-store" });
-      const data = await res.json().catch(() => null);
-      if (!res.ok || !data?.user) {
-        window.location.href = "/login";
-        return;
-      }
-    } catch {
-      window.location.href = "/login";
-      return;
-    }
     setName("");
     setPhase("naming");
+  }
+
+  async function thumbnail(): Promise<Blob | null> {
+    const handle = stageRef.current;
+    if (!handle) return null;
+    try {
+      const { w, h } = docDimensions(doc, presetByKey);
+      return await handle.exportBlob({ w: THUMB_W, h: Math.round((THUMB_W * h) / w), format: "jpeg", quality: 0.8 });
+    } catch {
+      return null;
+    }
   }
 
   async function save() {
@@ -44,20 +44,11 @@ export default function SaveDesignButton() {
     setError(null);
     setPhase("saving");
     try {
-      const csrf = readCookie("pc_csrf");
-      const res = await fetch("/unavailable/templates", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(csrf ? { "x-csrf-token": csrf } : {}),
-        },
-        body: JSON.stringify({ name: trimmed, design: doc }),
-      });
-      if (!res.ok) throw new Error("Could not save. Please try again.");
+      await saveDesign(trimmed.slice(0, 120), doc, await thumbnail());
       setPhase("saved");
       setTimeout(() => setPhase("idle"), 2000);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong.");
+    } catch {
+      setError("Could not save. Browser storage may be full or disabled.");
       setPhase("naming");
     }
   }
@@ -76,6 +67,7 @@ export default function SaveDesignButton() {
             }}
             placeholder="Design name"
             autoFocus
+            maxLength={120}
             disabled={phase === "saving"}
             className="w-40 rounded-sm border border-line bg-paper px-3 py-1.5 text-sm text-ink outline-none focus:border-brand focus:ring-2 focus:ring-brand/30 disabled:opacity-60"
           />
@@ -123,7 +115,8 @@ export default function SaveDesignButton() {
     <button
       type="button"
       onClick={begin}
-      className="inline-flex items-center gap-1.5 rounded-sm border border-line bg-panel px-3 py-1.5 text-sm font-bold text-ink transition hover:border-brand hover:text-brand"
+      disabled={doc.layers.length === 0}
+      className="inline-flex items-center gap-1.5 rounded-sm border border-line bg-panel px-3 py-1.5 text-sm font-bold text-ink transition hover:border-brand hover:text-brand disabled:opacity-50 disabled:hover:border-line disabled:hover:text-ink"
     >
       <Save className="h-4 w-4" strokeWidth={2} />
       Save

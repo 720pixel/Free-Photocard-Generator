@@ -31,8 +31,6 @@ export const STRINGS = {
   addText: { bn: "টেক্সট যোগ করুন", en: "Add text" },
   upload: { bn: "আপলোড", en: "Upload" },
   apply: { bn: "প্রয়োগ", en: "Apply" },
-  login: { bn: "লগইন", en: "Login" },
-  apply_account: { bn: "অ্যাকাউন্টের আবেদন", en: "Apply for account" },
 } as const;
 
 export type StringKey = keyof typeof STRINGS;

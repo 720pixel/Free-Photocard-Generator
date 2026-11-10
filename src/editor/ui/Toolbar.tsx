@@ -10,7 +10,6 @@ import { captureTelemetry, downloadBlob, exportFilename, runExport } from "./exp
 import { IconBtn } from "./controls";
 import { ThemeSwap } from "./ThemeSwap";
 import SaveDesignButton from "./SaveDesignButton";
-import AccountMenu from "./AccountMenu";
 import LogoMark from "@/components/LogoMark";
 
 export function Toolbar({ stageRef }: { stageRef: React.RefObject<StageHandle | null> }) {
@@ -98,12 +97,7 @@ export function Toolbar({ stageRef }: { stageRef: React.RefObject<StageHandle | 
       <IconBtn title="Reset canvas" onClick={doReset}><RotateCcw size={16} /></IconBtn>
 
       <div className="ml-auto flex items-center gap-2">
-        {process.env.NEXT_PUBLIC_EDITION !== "public" && (
-          <>
-            <SaveDesignButton />
-            <AccountMenu />
-          </>
-        )}
+        <SaveDesignButton stageRef={stageRef} />
         <ThemeSwap />
         {open && (
           <div className="flex items-center gap-2 rounded-lg border border-line bg-panel px-2 py-1">

@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { LogIn, Menu, UserPlus, Wand2, X } from "lucide-react";
+import { Menu, Wand2, X } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 import LocaleToggle from "@/components/LocaleToggle";
 import LogoMark from "@/components/LogoMark";
 import { T } from "./T";
 
-// Open-source build ships the editor only; account and generator nav are gated.
+// Open-source build ships the editor only; generator nav is gated.
 const isPublic = process.env.NEXT_PUBLIC_EDITION === "public";
 
 export default function Header() {
@@ -48,24 +48,12 @@ export default function Header() {
           </Link>
           <LocaleToggle />
           <ThemeToggle />
-          {!isPublic && (
-            <>
-              <Link
-                href="/login"
-                className="inline-flex items-center gap-1.5 rounded-full border border-line bg-panel px-3 py-2 text-sm font-semibold text-ink transition hover:border-ink"
-              >
-                <LogIn className="h-4 w-4" strokeWidth={1.75} />
-                <T bn="লগইন" en="Login" />
-              </Link>
-              <Link
-                href="/apply"
-                className="inline-flex items-center gap-1.5 rounded-full bg-brand px-3.5 py-2 text-sm font-semibold text-paper transition hover:opacity-90"
-              >
-                <UserPlus className="h-4 w-4" strokeWidth={1.75} />
-                <T bn="আবেদন" en="Apply" />
-              </Link>
-            </>
-          )}
+          <Link
+            href="/editor"
+            className="inline-flex items-center gap-1.5 rounded-full bg-brand px-3.5 py-2 text-sm font-semibold text-paper transition hover:opacity-90"
+          >
+            <T bn="এডিটর" en="Editor" />
+          </Link>
         </nav>
 
         {/* Mobile controls */}
@@ -113,26 +101,6 @@ export default function Header() {
             >
               <T bn="টেমপ্লেট দেখুন" en="Browse templates" />
             </Link>
-            {!isPublic && (
-            <div className="mt-1 grid grid-cols-2 gap-1">
-              <Link
-                href="/login"
-                onClick={() => setOpen(false)}
-                className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-line px-4 py-3 text-sm font-semibold text-ink"
-              >
-                <LogIn className="h-4 w-4" strokeWidth={1.75} />
-                <T bn="লগইন" en="Login" />
-              </Link>
-              <Link
-                href="/apply"
-                onClick={() => setOpen(false)}
-                className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-ink px-4 py-3 text-sm font-semibold text-ink"
-              >
-                <UserPlus className="h-4 w-4" strokeWidth={1.75} />
-                <T bn="আবেদন" en="Apply" />
-              </Link>
-            </div>
-            )}
           </nav>
         </div>
       )}
